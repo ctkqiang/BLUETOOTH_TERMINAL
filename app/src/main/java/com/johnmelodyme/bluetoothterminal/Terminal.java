@@ -1,10 +1,10 @@
 package com.johnmelodyme.bluetoothterminal;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.sql.Connection;
 import java.util.Set;
 
 /**
@@ -27,12 +28,13 @@ public class Terminal extends AppCompatActivity {
     BluetoothAdapter BA;
     BluetoothManager BM;
     BluetoothDevice BD;
-    TextView bluetooth_textView;
+    TextView bluetooth_textView, Connected_device;
     ImageButton BLUETOOTH_SWITCH, SETTING;
     {
         REQUEST_CODE = 1;
     }
 
+    @Override
     public void onStart(){
         super.onStart();
         System.out.println("APPLICATION STARTING...");
@@ -43,6 +45,7 @@ public class Terminal extends AppCompatActivity {
         BLUETOOTH_SWITCH = findViewById(R.id.BLUETOOTH_SWITCH);
         bluetooth_textView = findViewById(R.id.BT);
         SETTING = findViewById(R.id.Setting);
+        Connected_device = findViewById(R.id.connectedDevice);
     }
 
     @Override
@@ -110,6 +113,7 @@ public class Terminal extends AppCompatActivity {
                 String DEVICE_ADDRESS;
                 DEVICE_NAME = DEVICE.getName();
                 DEVICE_ADDRESS = DEVICE.getAddress();
+                Connected_device.setText(DEVICE_NAME + DEVICE_ADDRESS);
             }
         }
     }
