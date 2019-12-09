@@ -12,17 +12,22 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Set;
+
 /**
  * @CREATOR: JOHN MELODY MELISSA ESKHOLAZHT .C.T.K.
  * @DATETIME: 12/12/2019
  * @COPYRIGHT: 2019 - 2023
  * @PROJECTNAME: BLUETOOTH LOW ENERGY TERMINAL
  */
+
 public class Terminal extends AppCompatActivity {
     // DECLARATION :
     int REQUEST_CODE;
     BluetoothAdapter BA;
     BluetoothManager BM;
+    BluetoothDevice BD;
+    TextView bluetooth_textView;
     ImageButton BLUETOOTH_SWITCH, SETTING;
     {
         REQUEST_CODE = 1;
@@ -36,6 +41,7 @@ public class Terminal extends AppCompatActivity {
     private void init_DECLARATION() {
         BA = BluetoothAdapter.getDefaultAdapter();
         BLUETOOTH_SWITCH = findViewById(R.id.BLUETOOTH_SWITCH);
+        bluetooth_textView = findViewById(R.id.BT);
         SETTING = findViewById(R.id.Setting);
     }
 
@@ -54,14 +60,24 @@ public class Terminal extends AppCompatActivity {
                 // ENABLE BLUETOOTH _ REQUEST::
                 //CHECK_BLUETOOTH()
                 BA.enable();
-                Toast.makeText(Terminal.this, "BLUETOOTH ON",
-                        Toast.LENGTH_SHORT)
-                        .show();
                 // ON CLICK DISABLE BLUETOOTH:
                 BA.disable();
-                Toast.makeText(Terminal.this, "BLUETOOTH OFF",
-                        Toast.LENGTH_SHORT)
-                        .show();
+                // SHOW MESSAGE OF EACH ACTION TAKEN || SET_TEXT_ BLUETOOTH_SWITCH ::
+                if (!BA.isEnabled()){
+                    String bluetooth_is_ENABLED;
+                    bluetooth_is_ENABLED = "BT: ON";
+                    bluetooth_textView.setText(bluetooth_is_ENABLED);
+                    Toast.makeText(Terminal.this, "BLUETOOTH ON",
+                            Toast.LENGTH_SHORT)
+                            .show();
+                } else {
+                    String bluetooth_is_DISABLED;
+                    bluetooth_is_DISABLED = "BT: OFF";
+                    bluetooth_textView.setText(bluetooth_is_DISABLED);
+                    Toast.makeText(Terminal.this, "BLUETOOTH OFF",
+                            Toast.LENGTH_SHORT)
+                            .show();
+                }
             }
         });
 
@@ -74,6 +90,28 @@ public class Terminal extends AppCompatActivity {
                 return false;
             }
         });
+
+        // OPEN APPLICATION SETTINGS:
+        SETTING.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent TO_SETTING;
+                TO_SETTING = new Intent(Terminal.this, pereference.class);
+                startActivity(TO_SETTING);
+            }
+        });
+
+        // QUERY PAIRED DEVICES:
+        Set<BluetoothDevice> PAIRED_DEVICES = BA.getBondedDevices();
+        if (PAIRED_DEVICES.size() > 0){
+            // GET NAMES AND ADDRESSES OF EACH PAIRED DEVICES:
+            for (BluetoothDevice DEVICE : PAIRED_DEVICES){
+                String DEVICE_NAME;
+                String DEVICE_ADDRESS;
+                DEVICE_NAME = DEVICE.getName();
+                DEVICE_ADDRESS = DEVICE.getAddress();
+            }
+        }
     }
 
     private void OPEN_DEVICE_BLUETOOTH_SETTINGS() {
