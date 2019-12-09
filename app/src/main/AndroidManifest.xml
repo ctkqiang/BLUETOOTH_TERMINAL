@@ -19,12 +19,12 @@
         android:supportsRtl="true"
         android:theme="@style/terminal_main"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-
+        <activity android:name=".pereference"></activity>
         <activity
             android:name=".Terminal"
             android:theme="@style/terminal_main" />
-
-        <activity android:name=".flash"
+        <activity
+            android:name=".flash"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

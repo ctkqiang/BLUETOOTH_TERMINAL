@@ -7,6 +7,9 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -20,43 +23,76 @@ public class Terminal extends AppCompatActivity {
     int REQUEST_CODE;
     BluetoothAdapter BA;
     BluetoothManager BM;
+    ImageButton BLUETOOTH_SWITCH, SETTING;
     {
         REQUEST_CODE = 1;
     }
 
     public void onStart(){
         super.onStart();
+        System.out.println("APPLICATION STARTING...");
     }
 
     private void init_DECLARATION() {
         BA = BluetoothAdapter.getDefaultAdapter();
+        BLUETOOTH_SWITCH = findViewById(R.id.BLUETOOTH_SWITCH);
+        SETTING = findViewById(R.id.Setting);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // REFER TO THE METHODS::
         init_DECLARATION();
-        CHECK_BLUETOOTH();
-        ON_BLUETOOTH();
+        BLUETOOTH_SUPPORTABIILITY();
+
+        // ON CLICKED CONNECTIVITY:
+        BLUETOOTH_SWITCH.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // ENABLE BLUETOOTH _ REQUEST::
+                //CHECK_BLUETOOTH()
+                BA.enable();
+                Toast.makeText(Terminal.this, "BLUETOOTH ON",
+                        Toast.LENGTH_SHORT)
+                        .show();
+                // ON CLICK DISABLE BLUETOOTH:
+                BA.disable();
+                Toast.makeText(Terminal.this, "BLUETOOTH OFF",
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
+
+        // OPEN DEVICE BLUETOOTH SETTING ON LONG PRESS:
+        BLUETOOTH_SWITCH.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                // WHEN LONG PRESS ON BUTTON DETECTED, RUN "OPEN_DEVICE_BLUETOOTH_SETTINGS();" METHOD::
+                OPEN_DEVICE_BLUETOOTH_SETTINGS(); // REFER METHOD
+                return false;
+            }
+        });
     }
 
-    private void ON_BLUETOOTH() {
-        if (!(BA.isEnabled())){
-            BM.getAdapter()
-                    .enable();
-        }
-        else {
-            String message = "BLUETOOTH ERROR";
-            System.out.println(message);
-        }
+    private void OPEN_DEVICE_BLUETOOTH_SETTINGS() {
+        Intent intentOpenBluetoothSettings;
+        intentOpenBluetoothSettings = new Intent();
+        intentOpenBluetoothSettings.setAction(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
+        startActivity(intentOpenBluetoothSettings);
     }
 
     private void CHECK_BLUETOOTH() {
-        BLUETOOTH_SUPPORTABIILITY();
         if (!(BA.isEnabled())){
+            String msg = "BLUETOOTH_REQUEST";
+            System.out.println(msg);
             Intent REQUEST_BLUETOOTH;
             REQUEST_BLUETOOTH = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(REQUEST_BLUETOOTH, REQUEST_CODE);
+        } else {
+            String msg = "SOMETHING IS WRONG";
+            System.out.println(msg);
         }
     }
 
