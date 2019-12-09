@@ -67,6 +67,7 @@ public class Terminal extends AppCompatActivity {
                 BA.disable();
                 // SHOW MESSAGE OF EACH ACTION TAKEN || SET_TEXT_ BLUETOOTH_SWITCH ::
                 if (!BA.isEnabled()){
+                    BA.startDiscovery();
                     String bluetooth_is_ENABLED;
                     bluetooth_is_ENABLED = "BT: ON";
                     bluetooth_textView.setText(bluetooth_is_ENABLED);
@@ -74,6 +75,7 @@ public class Terminal extends AppCompatActivity {
                             Toast.LENGTH_SHORT)
                             .show();
                 } else {
+                    BA.cancelDiscovery();
                     String bluetooth_is_DISABLED;
                     bluetooth_is_DISABLED = "BT: OFF";
                     bluetooth_textView.setText(bluetooth_is_DISABLED);
