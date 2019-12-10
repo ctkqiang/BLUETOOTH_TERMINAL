@@ -40,6 +40,7 @@ public class Terminal extends AppCompatActivity {
         System.out.println("APPLICATION STARTING...");
     }
 
+    //ON START DECLARATION ::
     private void init_DECLARATION() {
         BA = BluetoothAdapter.getDefaultAdapter();
         BLUETOOTH_SWITCH = findViewById(R.id.BLUETOOTH_SWITCH);
@@ -101,8 +102,20 @@ public class Terminal extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent TO_SETTING;
-                TO_SETTING = new Intent(Terminal.this, pereference.class);
+                TO_SETTING = new Intent(Terminal.this,
+                        pereference.class);
                 startActivity(TO_SETTING);
+            }
+        });
+
+        // SHOW THE TOAST_TEXT ON LONG PRESSED:
+        SETTING.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(Terminal.this, "SETTING",
+                        Toast.LENGTH_SHORT)
+                        .show();
+                return false;
             }
         });
 
@@ -116,6 +129,7 @@ public class Terminal extends AppCompatActivity {
                 String DEVICE_ADDRESS;
                 DEVICE_NAME = DEVICE.getName();
                 DEVICE_ADDRESS = DEVICE.getAddress();
+                // SET TEXT FOR DISPLAY::
                 Connected_device.setText(DEVICE_NAME + DEVICE_ADDRESS + THREAD_NAME);
             }
         }
@@ -125,6 +139,9 @@ public class Terminal extends AppCompatActivity {
         Intent intentOpenBluetoothSettings;
         intentOpenBluetoothSettings = new Intent();
         intentOpenBluetoothSettings.setAction(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
+        Toast.makeText(Terminal.this, "OPENING BLUETOOTH SETTING",
+                Toast.LENGTH_SHORT)
+                .show();
         startActivity(intentOpenBluetoothSettings);
     }
 
@@ -150,4 +167,6 @@ public class Terminal extends AppCompatActivity {
                     .show();
         }
     }
+
+
 }
