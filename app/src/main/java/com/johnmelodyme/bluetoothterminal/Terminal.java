@@ -11,10 +11,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.util.Set;
 
@@ -28,13 +30,17 @@ import java.util.Set;
 public class Terminal extends AppCompatActivity {
     // DECLARATION :
     int REQUEST_CODE;
+    int SYSTEM_EXIT_STATUS;
     BluetoothAdapter BA;
-    BluetoothManager BM;
+    BluetoothDevice BM;
     BluetoothDevice BD;
     TextView bluetooth_textView, Connected_device;
     ImageButton BLUETOOTH_SWITCH, SETTING;
+    Button READ;
+    byte [] READ_BUFFER;
     {
         REQUEST_CODE = 1;
+        SYSTEM_EXIT_STATUS = 0;
     }
 
     @Override
@@ -50,6 +56,7 @@ public class Terminal extends AppCompatActivity {
         bluetooth_textView = findViewById(R.id.BT);
         SETTING = findViewById(R.id.Setting);
         Connected_device = findViewById(R.id.connectedDevice);
+        READ = findViewById(R.id.read);
     }
 
     @Override
@@ -130,12 +137,24 @@ public class Terminal extends AppCompatActivity {
                 String THREAD_NAME = Thread.currentThread().getName();
                 String DEVICE_NAME;
                 String DEVICE_ADDRESS;
-                DEVICE_NAME = DEVICE.getName();
+                DEVICE_NAME = DEVICE.getName().toUpperCase();
                 DEVICE_ADDRESS = DEVICE.getAddress();
                 // SET TEXT FOR DISPLAY::
-                Connected_device.setText(DEVICE_NAME + DEVICE_ADDRESS + THREAD_NAME);
+                //Connected_device.setText(DEVICE_NAME + DEVICE_ADDRESS + THREAD_NAME);
+                if (DEVICE.getName().equals("HC-05")){
+                    BM = DEVICE;
+                    break;
+                }
+                Connected_device.setText(DEVICE_ADDRESS);
             }
         }
+
+        READ.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     private void OPEN_DEVICE_BLUETOOTH_SETTINGS() {
@@ -175,7 +194,6 @@ public class Terminal extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-
         // Create the object of
         // AlertDialog Builder class
         AlertDialog.Builder builder
@@ -198,36 +216,30 @@ public class Terminal extends AppCompatActivity {
         // DialogInterface interface.
 
         builder.setPositiveButton("Yes",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which)
-                            {
-                                finish();
-                            }
-                        });
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                }).setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
 
         // Set the Negative button with No name
         // OnClickListener method is use
         // of DialogInterface interface.
-        builder
-                .setNegativeButton(
-                        "No",
-                        new DialogInterface
-                                .OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which)
-                            {
-                                dialog.cancel();
-                            }
-                        });
-
         // Create the Alert dialog
         AlertDialog alertDialog = builder.create();
-
-        // Show the Alert Dialog box
         alertDialog.show();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
     }
 }
