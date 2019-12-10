@@ -1,0 +1,10 @@
+
+** https://stackoverflow.com/questions/4715865/how-to-programmatically-tell-if-a-bluetooth-device-is-connected#
+
+public static boolean isBluetoothHeadsetConnected() {
+    BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    return mBluetoothAdapter != null && mBluetoothAdapter.isEnabled()
+            && mBluetoothAdapter.getProfileConnectionState(BluetoothHeadset.HEADSET) == BluetoothHeadset.STATE_CONNECTED;
+}
+
+https://stackoverflow.com/questions/2115758/how-do-i-display-an-alert-dialog-on-android
