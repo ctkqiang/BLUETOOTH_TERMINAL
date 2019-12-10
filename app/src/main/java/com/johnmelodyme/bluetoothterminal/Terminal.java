@@ -111,11 +111,12 @@ public class Terminal extends AppCompatActivity {
         if (PAIRED_DEVICES.size() > 0){
             // GET NAMES AND ADDRESSES OF EACH PAIRED DEVICES:
             for (BluetoothDevice DEVICE : PAIRED_DEVICES){
+                String THREAD_NAME = Thread.currentThread().getName();
                 String DEVICE_NAME;
                 String DEVICE_ADDRESS;
                 DEVICE_NAME = DEVICE.getName();
                 DEVICE_ADDRESS = DEVICE.getAddress();
-                Connected_device.setText(DEVICE_NAME + DEVICE_ADDRESS);
+                Connected_device.setText(DEVICE_NAME + DEVICE_ADDRESS + THREAD_NAME);
             }
         }
     }
