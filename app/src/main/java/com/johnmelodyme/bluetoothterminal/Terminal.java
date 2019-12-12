@@ -31,6 +31,7 @@ public class Terminal extends AppCompatActivity {
     int REQUEST_CODE;
     int SYSTEM_EXIT_STATUS;
     int BYTE_COUNT;
+    byte [] READ_BUFFER;
     InputStream inputStream;
     OutputStream outputStream;
     BluetoothAdapter BA;
@@ -40,10 +41,11 @@ public class Terminal extends AppCompatActivity {
     TextView bluetooth_textView, Connected_device;
     ImageButton BLUETOOTH_SWITCH, SETTING;
     Button READ;
-    UUID uuid; //Standard SerialPortService ID
-    byte [] READ_BUFFER;
+    UUID uuid;
 
     {
+        READ_BUFFER = new byte[1024];
+        //Standard SerialPortService ID:
         uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
         REQUEST_CODE = 1;
         SYSTEM_EXIT_STATUS = 0;
@@ -68,9 +70,7 @@ public class Terminal extends AppCompatActivity {
         SETTING = findViewById(R.id.Setting);
         Connected_device = findViewById(R.id.connectedDevice);
         READ = findViewById(R.id.read);
-
     }
-
 
     private void OPEN_BLUETOOTH() throws IOException {
         BS = BD.createRfcommSocketToServiceRecord(uuid);
