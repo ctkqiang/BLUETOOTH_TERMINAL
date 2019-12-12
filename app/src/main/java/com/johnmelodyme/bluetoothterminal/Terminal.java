@@ -1,12 +1,10 @@
 package com.johnmelodyme.bluetoothterminal;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothManager;
-import android.content.Context;
+import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,30 +13,38 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.IOException;
-import java.sql.Connection;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Set;
+import java.util.UUID;
 
 /**
- * @CREATOR: JOHN MELODY MELISSA ESKHOLAZHT .C.T.K.
- * @DATETIME: 12/12/2019
- * @COPYRIGHT: 2019 - 2023
- * @PROJECTNAME: BLUETOOTH LOW ENERGY TERMINAL
+ * @CREATOR: JOHN MELODY MELISSA ESKHOLAZHT .C.T.K.;
+ * @DATETIME: 12/12/2019;
+ * @COPYRIGHT: 2019 - 2023;
+ * @PROJECTNAME: BLUETOOTH LOW ENERGY TERMINAL;
+ * @ACTIVITY: TERMINAL;
  */
 
 public class Terminal extends AppCompatActivity {
-    // DECLARATION :
     int REQUEST_CODE;
     int SYSTEM_EXIT_STATUS;
+    int BYTE_COUNT;
+    InputStream inputStream;
+    OutputStream outputStream;
     BluetoothAdapter BA;
+    BluetoothSocket BS;
     BluetoothDevice BM;
     BluetoothDevice BD;
     TextView bluetooth_textView, Connected_device;
     ImageButton BLUETOOTH_SWITCH, SETTING;
     Button READ;
+    UUID uuid; //Standard SerialPortService ID
     byte [] READ_BUFFER;
+
     {
+        uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
         REQUEST_CODE = 1;
         SYSTEM_EXIT_STATUS = 0;
     }
@@ -49,14 +55,28 @@ public class Terminal extends AppCompatActivity {
         System.out.println("APPLICATION STARTING...");
     }
 
-    //ON START DECLARATION ::
-    private void init_DECLARATION() {
+    /**
+     * @METHOD: init_DECLARACTION;
+     * @NAME: ON START DECLARATION ::
+     */
+    private void init_DECLARATION(){
         BA = BluetoothAdapter.getDefaultAdapter();
+
+
         BLUETOOTH_SWITCH = findViewById(R.id.BLUETOOTH_SWITCH);
         bluetooth_textView = findViewById(R.id.BT);
         SETTING = findViewById(R.id.Setting);
         Connected_device = findViewById(R.id.connectedDevice);
         READ = findViewById(R.id.read);
+
+    }
+
+
+    private void OPEN_BLUETOOTH() throws IOException {
+        BS = BD.createRfcommSocketToServiceRecord(uuid);
+        BS.connect();
+        outputStream = BS.getOutputStream();
+        inputStream = BS.getInputStream();
     }
 
     @Override
@@ -66,6 +86,12 @@ public class Terminal extends AppCompatActivity {
         // REFER TO THE METHODS::
         init_DECLARATION();
         BLUETOOTH_SUPPORTABIILITY();
+
+        try {
+            OPEN_BLUETOOTH();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // ON CLICKED CONNECTIVITY:
         BLUETOOTH_SWITCH.setOnClickListener(new View.OnClickListener() {
@@ -152,7 +178,6 @@ public class Terminal extends AppCompatActivity {
         READ.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
             }
         });
     }
@@ -190,31 +215,18 @@ public class Terminal extends AppCompatActivity {
         }
     }
 
-    // IF ON BACK PRESSED ::
+    /**
+     * @METHOD: onBackPressed;
+     * @NAME: DIALOG ON BACK PRESS;
+     */
     @Override
-    public void onBackPressed()
-    {
-        // Create the object of
-        // AlertDialog Builder class
+    public void onBackPressed() {
         AlertDialog.Builder builder
                 = new AlertDialog
                 .Builder(Terminal.this);
-
-        // Set the message show for the Alert time
         builder.setMessage("Do you want to exit ?");
-
-        // Set Alert Title
         builder.setTitle("ARE YOU SURE?");
-
-        // Set Cancelable false
-        // for when the user clicks on the outside
-        // the Dialog Box then it will remain show
         builder.setCancelable(false);
-
-        // Set the positive button with yes name
-        // OnClickListener method is use of
-        // DialogInterface interface.
-
         builder.setPositiveButton("Yes",
                 new DialogInterface.OnClickListener() {
                     @Override
@@ -229,15 +241,11 @@ public class Terminal extends AppCompatActivity {
                         dialog.cancel();
                     }
                 });
-
-        // Set the Negative button with No name
-        // OnClickListener method is use
-        // of DialogInterface interface.
-        // Create the Alert dialog
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
 
+    // ON DESTROY:
     @Override
     public void onDestroy(){
         super.onDestroy();
