@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">Bluetooth Terminal</string>
+    <string name="app_name">Bluetooth Terminal  </string>
     <string name="bt">BT: </string>
     <string name="read">READ</string>
+    <string name="version"> Version 1.0.0 <br/> by John Melody Melissa 2020</string>
 </resources>

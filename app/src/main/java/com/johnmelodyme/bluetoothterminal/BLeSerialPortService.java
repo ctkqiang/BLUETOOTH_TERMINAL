@@ -108,7 +108,7 @@ public class BLeSerialPortService extends Service implements BluetoothAdapter.Le
         }
     }
 
-    // Return true if connected to UART device, false otherwise.
+    // Return true if connected to UART device_TV, false otherwise.
     public boolean isConnected() {
         return (tx != null && rx != null);
     }
@@ -127,7 +127,7 @@ public class BLeSerialPortService extends Service implements BluetoothAdapter.Le
 
     public boolean deviceInfoAvailable() { return disAvailable; }
 
-    // Send data to connected ble serial port device.
+    // Send data to connected ble serial port device_TV.
     public void send(byte[] data) {
         long beginMillis = System.currentTimeMillis();
         if (tx == null || data == null || data.length == 0) {
@@ -146,7 +146,7 @@ public class BLeSerialPortService extends Service implements BluetoothAdapter.Le
         } ; // Wait for the flag to clear in onCharacteristicWrite
     }
 
-    // Send data to connected ble serial port device. We can only send 20 bytes per packet,
+    // Send data to connected ble serial port device_TV. We can only send 20 bytes per packet,
     // so break longer messages up into 20 byte payloads
     public void send(String string) {
         int len = string.length(); int pos = 0;
@@ -230,7 +230,7 @@ public class BLeSerialPortService extends Service implements BluetoothAdapter.Le
         return this;
     }
 
-    // Disconnect to a device if currently connected.
+    // Disconnect to a device_TV if currently connected.
     public BLeSerialPortService disconnect() {
         if (gatt != null) {
             gatt.disconnect();
@@ -242,7 +242,7 @@ public class BLeSerialPortService extends Service implements BluetoothAdapter.Le
         return this;
     }
 
-    //After using a given BLE device, the app must call this method to ensure resources are released properly.
+    //After using a given BLE device_TV, the app must call this method to ensure resources are released properly.
     public BLeSerialPortService close() {
         if (gatt != null) {
             disconnect();
@@ -253,7 +253,7 @@ public class BLeSerialPortService extends Service implements BluetoothAdapter.Le
         return this;
     }
 
-    // Stop any in progress bluetooth device scan.
+    // Stop any in progress bluetooth device_TV scan.
     public BLeSerialPortService stopScan() {
         if (adapter != null) {
             adapter.stopLeScan(this);
@@ -272,13 +272,13 @@ public class BLeSerialPortService extends Service implements BluetoothAdapter.Le
         return this;
     }
 
-    // Connect to the first available ble device.
+    // Connect to the first available ble device_TV.
     public BLeSerialPortService connectFirstAvailable() {
-        // Disconnect to any connected device.
+        // Disconnect to any connected device_TV.
         disconnect();
-        // Stop any in progress device scan.
+        // Stop any in progress device_TV scan.
         stopScan();
-        // Start scan and connect to first available device.
+        // Start scan and connect to first available device_TV.
         connectFirst = true;
         startScan();
 
@@ -292,13 +292,13 @@ public class BLeSerialPortService extends Service implements BluetoothAdapter.Le
             super.onConnectionStateChange(gatt, status, newState);
             if (newState == BluetoothGatt.STATE_CONNECTED) {
                 if (status == BluetoothGatt.GATT_SUCCESS) {
-                    // Connected to device, start discovering services.
+                    // Connected to device_TV, start discovering services.
                     if (!gatt.discoverServices()) {
                         // Error starting service discovery.
                         connectFailure();
                     }
                 } else {
-                    // Error connecting to device.
+                    // Error connecting to device_TV.
                     connectFailure();
                 }
             } else if (newState == BluetoothGatt.STATE_DISCONNECTED) {
@@ -401,19 +401,19 @@ public class BLeSerialPortService extends Service implements BluetoothAdapter.Le
     public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
         List<UUID> uuids = parseUUIDs(scanRecord);
 
-        // Stop if the device doesn't have the UART service.
+        // Stop if the device_TV doesn't have the UART service.
         if (uuids.contains(SERIAL_SERVICE_UUID)) {
 
-            // Notify registered callbacks of found device.
+            // Notify registered callbacks of found device_TV.
             notifyOnDeviceFound(device);
 
-            // Connect to first found device if required.
+            // Connect to first found device_TV if required.
             if (connectFirst) {
                 // Stop scanning for devices.
                 stopScan();
                 // Prevent connections to future found devices.
                 connectFirst = false;
-                // Connect to device.
+                // Connect to device_TV.
                 gatt = device.connectGatt(context, true, mGattCallback);
             }
         }

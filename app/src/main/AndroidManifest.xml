@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.johnmelodyme.bluetoothterminal"
+    android:screenOrientation="portrait"
     android:installLocation="preferExternal">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -13,22 +14,22 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/terminal_main"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".pereference"></activity>
+        <activity android:name=".pereference"
+            android:theme="@style/another_terminal_main"/>
         <activity
             android:name=".Terminal"
             android:theme="@style/terminal_main" />
         <activity
             android:name=".flash"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            android:theme="@style/FULL">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
