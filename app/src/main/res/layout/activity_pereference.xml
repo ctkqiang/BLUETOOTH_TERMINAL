@@ -9,27 +9,21 @@
 
     <ListView
         android:id="@+id/LIST_VIEW_PEREFERENCE"
-        android:layout_width="364dp"
-        android:layout_height="538dp"
-        android:layout_marginBottom="9dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView3"
+        android:layout_width="0dp"
+        android:layout_height="426dp"
+        android:layout_marginTop="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="348dp"
+        android:layout_width="0dp"
         android:layout_height="17dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="6dp"
         android:text="@string/version"
         android:textAlignment="textEnd"
         android:textColor="@android:color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/LIST_VIEW_PEREFERENCE" />
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

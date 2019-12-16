@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.SyncStateContract;
 import android.provider.SyncStateContract.Constants;
 import android.view.View;
@@ -35,7 +36,7 @@ import java.util.UUID;
 
 /**
  * @CREATOR: JOHN MELODY MELISSA ESKHOLAZHT .C.T.K.;
- * @DATETIME: 16/12/2019;
+ * @DATETIME: 12/12/2019;
  * @COPYRIGHT: 2019 - 2023;
  * @PROJECTNAME: BLUETOOTH LOW ENERGY TERMINAL;
  * @ACTIVITY: TERMINAL;
@@ -61,7 +62,7 @@ public class Terminal extends AppCompatActivity {
     TextView bluetooth_textView, Connected_device, device_TV, found_device;
     ImageButton BLUETOOTH_SWITCH, SETTING;
     ListView List_of_device;
-    Button READ;
+    Button READ, SAVE_DATA;
     UUID uuid;
 
     {
@@ -83,6 +84,7 @@ public class Terminal extends AppCompatActivity {
     @Override
     public void onDestroy(){
         super.onDestroy();
+        unregisterReceiver(receiver);
     }
 
     /**
@@ -101,7 +103,7 @@ public class Terminal extends AppCompatActivity {
         List_of_device.setBackgroundColor(Color.TRANSPARENT);
         device_TV = findViewById(R.id.dev);
         found_device = findViewById(R.id.Found);
-
+        SAVE_DATA = findViewById(R.id.Save_data);
         // HC-05 :
         MAC_ADDRESS = "00:18:E4:40:00:06";
     }
@@ -220,33 +222,28 @@ public class Terminal extends AppCompatActivity {
         List_of_device.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                BluetoothDevice bluetooth_devices;
-                bluetooth_devices = (BluetoothDevice) List_of_device.getItemAtPosition(position);
-                try {
-                    String CREATE_BOND = "CREATE_BOND";
-                    Method method = bluetooth_devices.getClass().getMethod(CREATE_BOND,(Class[])null);
-                    method.invoke(bluetooth_devices, (Object[])null);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    System.out.println("SOMETHING IS VERY WRONG");
-                }
-                /*
-                String selected = ( String) parent.getItemAtPosition(position);
-                String deviceSELECTED = BD.getName();
-                if (selected.equals("HC-05")){
-                    if (BD.getName().equals("HC-05")){
-                        connectThread = new ConnectThread(BD);
-                        connectThread.start();
+                // Get the selected item text from ListView::
+                String CLICKED_DEVICE_NAME;
+                CLICKED_DEVICE_NAME = (String) parent.getItemAtPosition(position);
+                if (CLICKED_DEVICE_NAME.equals("HC-05")){
+                    try {
+                        Method method = BD.getClass().getMethod("createBond", (Class[]) null);
+                        method.invoke(BD, (Object[]) null);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                }
-                if(BD.getName().equals("HC-05")){
-                    BM.createBond();
+
+                    Toast.makeText(Terminal.this, "Clicked \"HC-05\" ", Toast.LENGTH_SHORT).show();
+                } else if (CLICKED_DEVICE_NAME.equals("HC-06")){
+                    try {
+                        Method method = BD.getClass().getMethod("createBond", (Class[]) null);
+                        method.invoke(BD, (Object[]) null);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 } else {
-                    Toast.makeText(Terminal.this, "Please Connect a \"HC-05\"",
-                            Toast.LENGTH_SHORT)
-                            .show();
+                    System.out.println("OPPS");
                 }
-                 */
             }
         });
 
@@ -256,6 +253,14 @@ public class Terminal extends AppCompatActivity {
             }
         });
 
+        SAVE_DATA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!EXTERNAL_DRIVE_AVAILABLE() || EXTERNAL_DRIVE_READ_ONLY()) {
+                    SAVE_DATA.setEnabled(false);
+                }
+            }
+        });
     }
 
     private void CONNECT_BLUETOOTH() {
@@ -270,6 +275,10 @@ public class Terminal extends AppCompatActivity {
                 device_TV.setText(device.getName());
             }
         }
+
+        IntentFilter BROAD;
+        BROAD = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
+        registerReceiver(receiver, BROAD);
 
     }
 
@@ -398,4 +407,21 @@ public class Terminal extends AppCompatActivity {
         alertDialog.show();
     }
      */
+
+    private static boolean EXTERNAL_DRIVE_AVAILABLE(){
+        String EXTERNAL_STORAGE_STATE;
+        EXTERNAL_STORAGE_STATE = Environment.getExternalStorageState();
+        if(Environment.MEDIA_MOUNTED.equals(EXTERNAL_STORAGE_STATE)){
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean EXTERNAL_DRIVE_READ_ONLY(){
+        String extStorageState = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(extStorageState)) {
+            return true;
+        }
+        return false;
+    }
 }

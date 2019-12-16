@@ -3,4 +3,5 @@
     <string name="bt">BT: </string>
     <string name="read">READ</string>
     <string name="version"> Version 1.0.0 <br/> by John Melody Melissa 2020</string>
+    <string name="save">SAVE</string>
 </resources>

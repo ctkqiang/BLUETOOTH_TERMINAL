@@ -46,10 +46,25 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <Button
+        android:id="@+id/Save_data"
+        style="@android:style/Widget.Material.Light.Button.Toggle"
+        android:layout_width="117dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="119dp"
+        android:layout_marginBottom="7dp"
+        android:background="@android:color/white"
+        android:text="@string/save"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <ListView
         android:id="@+id/listofdevice"
         android:layout_width="0dp"
-        android:layout_height="131dp"
+        android:layout_height="187dp"
+        android:layout_marginBottom="1dp"
+        app:layout_constraintBottom_toTopOf="@+id/Found"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/connectedDevice" />
@@ -58,7 +73,9 @@
         android:id="@+id/Found"
         android:layout_width="0dp"
         android:layout_height="47dp"
+        android:layout_marginTop="1dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/listofdevice" />
 
