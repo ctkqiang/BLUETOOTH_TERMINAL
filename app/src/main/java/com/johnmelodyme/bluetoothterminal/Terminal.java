@@ -9,8 +9,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
+import android.provider.SyncStateContract.Constants;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -39,6 +42,8 @@ import java.util.UUID;
  */
 
 public class Terminal extends AppCompatActivity {
+    String ConnectedDeviceName = null;
+    public static String MAC_ADDRESS;
     int REQUEST_CODE;
     int SYSTEM_EXIT_STATUS;
     int BYTE_COUNT;
@@ -53,7 +58,7 @@ public class Terminal extends AppCompatActivity {
     List<BluetoothDevice> deviceList = new ArrayList<>();
     ArrayAdapter<String> AA;
     ConnectThread connectThread;
-    TextView bluetooth_textView, Connected_device, device_TV;
+    TextView bluetooth_textView, Connected_device, device_TV, found_device;
     ImageButton BLUETOOTH_SWITCH, SETTING;
     ListView List_of_device;
     Button READ;
@@ -95,6 +100,10 @@ public class Terminal extends AppCompatActivity {
         List_of_device = findViewById(R.id.listofdevice);
         List_of_device.setBackgroundColor(Color.TRANSPARENT);
         device_TV = findViewById(R.id.dev);
+        found_device = findViewById(R.id.Found);
+
+        // HC-05 :
+        MAC_ADDRESS = "00:18:E4:40:00:06";
     }
 
     /*
@@ -114,17 +123,24 @@ public class Terminal extends AppCompatActivity {
         init_DECLARATION();
         BLUETOOTH_SUPPORTABIILITY();
 
+        if (BA.isDiscovering()){
+            BA.cancelDiscovery();
+        }
+        BA.startDiscovery();
+
+        IntentFilter BROAD;
+        BROAD = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
+        registerReceiver(receiver, BROAD);
+
         // ON CLICKED CONNECTIVITY:
         BLUETOOTH_SWITCH.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // ENABLE BLUETOOTH _ REQUEST::
-                //CHECK_BLUETOOTH()
-                BA.enable();
-                // ON CLICK DISABLE BLUETOOTH:
-                BA.disable();
+                // CHECK_BLUETOOTH()
                 // SHOW MESSAGE OF EACH ACTION TAKEN || SET_TEXT_ BLUETOOTH_SWITCH ::
                 if (!BA.isEnabled()){
+                    BA.enable();
                     BA.startDiscovery();
                     String bluetooth_is_ENABLED;
                     bluetooth_is_ENABLED = "BT: ON";
@@ -133,6 +149,7 @@ public class Terminal extends AppCompatActivity {
                             Toast.LENGTH_SHORT)
                             .show();
                 } else {
+                    BA.disable();
                     BA.cancelDiscovery();
                     String bluetooth_is_DISABLED;
                     bluetooth_is_DISABLED = "BT: OFF";
@@ -192,9 +209,7 @@ public class Terminal extends AppCompatActivity {
                 // SET TEXT FOR DISPLAY::
                 //Connected_device.setText(DEVICE_NAME + DEVICE_ADDRESS + THREAD_NAME);
                 Connected_device.setText(DEVICE_ADDRESS);
-                arrayList.add(DEVICE_NAME);
-
-
+                arrayList.add(DEVICE_NAME + " [" + DEVICE_ADDRESS + "]");
             }
             AA = new ArrayAdapter(Terminal.this, R.layout.support_simple_spinner_dropdown_item, arrayList);
             List_of_device.setAdapter(AA);
@@ -213,10 +228,10 @@ public class Terminal extends AppCompatActivity {
                     method.invoke(bluetooth_devices, (Object[])null);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    System.out.println("SOMETHING IS VERY WRONG");
                 }
-
                 /*
-                String selected = (String) parent.getItemAtPosition(position);
+                String selected = ( String) parent.getItemAtPosition(position);
                 String deviceSELECTED = BD.getName();
                 if (selected.equals("HC-05")){
                     if (BD.getName().equals("HC-05")){
@@ -224,7 +239,6 @@ public class Terminal extends AppCompatActivity {
                         connectThread.start();
                     }
                 }
-
                 if(BD.getName().equals("HC-05")){
                     BM.createBond();
                 } else {
@@ -325,13 +339,32 @@ public class Terminal extends AppCompatActivity {
             String action = intent.getAction();
             // When discovery finds a device_TV
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                int state;
+                int prev_state;
+                state = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, BluetoothDevice.ERROR);
+                prev_state = intent.getIntExtra(BluetoothDevice.EXTRA_PREVIOUS_BOND_STATE, BluetoothDevice.ERROR);
+                if (state == BluetoothDevice.BOND_BONDED && prev_state == BluetoothDevice.BOND_BONDING) {
+                    String PAIREDE;
+                    PAIREDE = "Paired";
+                    Toast.makeText(getApplicationContext(), PAIREDE,
+                            Toast.LENGTH_SHORT)
+                            .show();
+                } else if (state == BluetoothDevice.BOND_NONE && prev_state == BluetoothDevice.BOND_BONDED){
+                    String UNPAIREDE;
+                    UNPAIREDE = "Unpaired";
+                    Toast.makeText(getApplicationContext(), UNPAIREDE,
+                            Toast.LENGTH_SHORT)
+                            .show();
+                }
                 // Get the BluetoothDevice object from the Intent
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                deviceList.add(device);
+                found_device.setText("Device Found: " + device.getName().toUpperCase());
+                /*
                 // Add the name and address to an array adapter to show in a ListView::
                 String DD = device.getName();
                 deviceARRAY.add(DD);
-
+                 *
+                 */
             }
         }
     };

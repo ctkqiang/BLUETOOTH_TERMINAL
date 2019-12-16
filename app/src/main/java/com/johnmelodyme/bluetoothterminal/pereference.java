@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -12,6 +13,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -29,8 +31,8 @@ public class pereference extends AppCompatActivity {
     String [] settings;
 
     {
-        settings = new String[]{"Font Size", "Save In Folder",
-                "Email to Developer", "Source Code", "About"};
+        settings = new String[]{"Save In Folder",
+                "Email to Developer", "Source Code"};
     }
 
     public void INIT_DECLARATION(){
@@ -57,26 +59,41 @@ public class pereference extends AppCompatActivity {
                 // Get the selected item text from ListView
                 String CLICKED_LIST;
                 CLICKED_LIST = (String) parent.getItemAtPosition(position);
-                if(CLICKED_LIST.equals("Font Size")){
-
+                if (CLICKED_LIST.equals("Save In Folder")){
+                    SAVE_DATA_TO_EXTERNAL_STORAGE();
                 }
-                else if (CLICKED_LIST.equals("Save In Folder")){
-
-                }
-                else if (CLICKED_LIST.equals("Email TO developer")){
-
+                else if (CLICKED_LIST.equals("Email to Developer")){
+                    EMAIL_TO_DEVELOPER();
                 }
                 else if (CLICKED_LIST.equals("Source Code")){
                     SOURCE_CODE();
-                }
-                else if (CLICKED_LIST.equals("About")){
-
                 }
                 else {
                     System.out.println("$LIST:: null");
                 }
             }
         });
+    }
+
+    private void SAVE_DATA_TO_EXTERNAL_STORAGE() {
+    }
+
+    // @METHODS :: Email to Developer:
+    private void EMAIL_TO_DEVELOPER() {
+        Intent emailTODeveloper = new Intent(Intent.ACTION_SEND);
+        emailTODeveloper.setType("text/plain");
+        emailTODeveloper.putExtra(Intent.EXTRA_EMAIL, new String[]
+                {"johnmelodyme@androiddeveloper.onexmail.com"});
+        emailTODeveloper.putExtra(Intent.EXTRA_CC, new String[]
+                {"Johnmelodyme@icloud.com"});
+        emailTODeveloper.putExtra(Intent.EXTRA_SUBJECT,
+                "[FROM BLUETOOTH TERMINAL APPLICATION] Hey Developer, I have some suggestion and Issue!");
+        emailTODeveloper.putExtra(Intent.EXTRA_TEXT,
+                "[FROM BLUETOOTH TERMINAL APPLICATION] Hey Developer, I have some suggestion and Issue!");
+        try {
+            startActivity(Intent.createChooser(emailTODeveloper,"Pick a Email Platform: "));
+        } catch (Exception ignored) {
+        }
     }
 
     private void SOURCE_CODE() {

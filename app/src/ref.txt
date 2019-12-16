@@ -8,3 +8,6 @@ public static boolean isBluetoothHeadsetConnected() {
 }
 
 https://stackoverflow.com/questions/2115758/how-do-i-display-an-alert-dialog-on-android
+https://stackoverflow.com/questions/40590908/how-do-i-receive-bluetooth-data-from-arduino-to-android
+https://solidgeargroup.com/discovery-bluetooth-devices-android/
+http://www.londatiga.net/it/programming/android/how-to-programmatically-pair-or-unpair-android-bluetooth-device/
