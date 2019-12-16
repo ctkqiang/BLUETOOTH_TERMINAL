@@ -12,3 +12,25 @@ https://stackoverflow.com/questions/40590908/how-do-i-receive-bluetooth-data-fro
 https://solidgeargroup.com/discovery-bluetooth-devices-android/
 http://www.londatiga.net/it/programming/android/how-to-programmatically-pair-or-unpair-android-bluetooth-device/
 http://mcuhq.com/27/simple-android-bluetooth-application-with-arduino-example
+
+
+mHandler = new Handler(){
+    public void handleMessage(android.os.Message msg){
+        if(msg.what == MESSAGE_READ){
+            String readMessage = null;
+            try {
+                readMessage = new String((byte[]) msg.obj, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            mReadBuffer.setText(readMessage);
+        }
+
+        if(msg.what == CONNECTING_STATUS){
+            if(msg.arg1 == 1)
+                mBluetoothStatus.setText("Connected to Device: " + (String)(msg.obj));
+            else
+                mBluetoothStatus.setText("Connection Failed");
+        }
+    }
+};

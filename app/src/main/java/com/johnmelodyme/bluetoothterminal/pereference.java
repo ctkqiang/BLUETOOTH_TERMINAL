@@ -6,12 +6,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.List;
@@ -24,10 +26,8 @@ import java.util.List;
  * @ACTIVITY: PEREFERENCE;
  */
 public class pereference extends AppCompatActivity {
-
     ListView LIST_VIEW_PEREFERENCE;
     ArrayAdapter arrayAdapter;
-
     String [] settings;
 
     {

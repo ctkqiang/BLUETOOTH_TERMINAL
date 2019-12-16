@@ -1,3 +1,5 @@
+package com.johnmelodyme.bluetoothterminal;
+
 /*
  * Copyright 2020 John Melody Me
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -10,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.johnmelodyme.bluetoothterminal;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
@@ -25,8 +26,7 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.SyncStateContract;
-import android.provider.SyncStateContract.Constants;
+import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -39,7 +39,6 @@ import android.widget.Toast;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,13 +69,13 @@ public class Terminal extends AppCompatActivity {
     List<String> deviceARRAY = new ArrayList<>();
     List<BluetoothDevice> deviceList = new ArrayList<>();
     ArrayAdapter<String> AA;
+    ArrayAdapter arrayAdapter_term;
     ConnectThread connectThread;
     TextView bluetooth_textView, Connected_device, device_TV, found_device;
     ImageButton BLUETOOTH_SWITCH, SETTING;
-    ListView List_of_device;
+    ListView List_of_device, READ_BUFFER_LV;
     Button READ, SAVE_DATA;
     UUID uuid;
-
     {
         READ_BUFFER = new byte[1024];
         //Standard SerialPortService ID:
@@ -85,6 +84,7 @@ public class Terminal extends AppCompatActivity {
         SYSTEM_EXIT_STATUS = 0;
     }
 
+    // ON START
     @Override
     public void onStart(){
         super.onStart();
@@ -114,10 +114,16 @@ public class Terminal extends AppCompatActivity {
         List_of_device = findViewById(R.id.listofdevice);
         List_of_device.setBackgroundColor(Color.TRANSPARENT);
         device_TV = findViewById(R.id.dev);
-        found_device = findViewById(R.id.Found);
         SAVE_DATA = findViewById(R.id.Save_data);
+        READ_BUFFER_LV = findViewById(R.id.read_buffer);
         // HC-05 :
         MAC_ADDRESS = "00:18:E4:40:00:06";
+    }
+
+    private void TERMINAL_SCREEN() {
+        String BUFFERED_DATA [] = new String[]{"0A", "78" , "0X0A"};
+        arrayAdapter_term = new ArrayAdapter<String>(this, R.layout.termview, BUFFERED_DATA);
+        READ_BUFFER_LV.setAdapter(arrayAdapter_term);
     }
 
     /*
@@ -262,6 +268,7 @@ public class Terminal extends AppCompatActivity {
         READ.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                TERMINAL_SCREEN();
             }
         });
 
@@ -436,4 +443,6 @@ public class Terminal extends AppCompatActivity {
         }
         return false;
     }
+
+
 }
