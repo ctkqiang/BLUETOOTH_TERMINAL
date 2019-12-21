@@ -1,7 +1,5 @@
 package com.johnmelodyme.bluetoothterminal;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,11 +23,11 @@ import java.util.List;
  * @PROJECTNAME: BLUETOOTH LOW ENERGY TERMINAL;
  * @ACTIVITY: PEREFERENCE;
  */
+
 public class pereference extends AppCompatActivity {
     ListView LIST_VIEW_PEREFERENCE;
     ArrayAdapter arrayAdapter;
     String [] settings;
-
     {
         settings = new String[]{"Save In Folder",
                 "Email to Developer", "Source Code"};
